@@ -15,24 +15,9 @@ import ShowTransactionModal from "./ShowInsightModel";
 import MonthlyBarChart from "./MonthlyBarChart";
 
 import CategoryPieChart from "./ui/CategoryPieChart";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-} from "@/components/ui/card";
-import { set } from "mongoose";
 
 
-
-const Dashboard = () => {
-  // capture the transactions in state
-  useEffect(() => {
-    // Load transactions from local storage on component mount
-    const storedTransactions = JSON.parse(localStorage.getItem("transactions")) || [];
-    setTransactions(storedTransactions);
-    console.log("Transactions loaded from local storage: ", storedTransactions);
-  }, []);
+const Dashboard = ({ transactions: demoTransactions }) => {
 
   const [transactions, setTransactions] = useState([]);
   const [editingTransaction, setEditingTransaction] = useState(null);
@@ -41,6 +26,17 @@ const Dashboard = () => {
   const [ShowInsightModel, setShowInsightModel] = useState(0)
 
 
+  // capture the transactions in state
+  useEffect(() => {
+    // Load transactions from local storage on component mount
+    const storedTransactions = JSON.parse(localStorage.getItem("transactions")) || [];
+    const fallback = storedTransactions.length > 0 ? storedTransactions : demoTransactions || [];
+    setTransactions(fallback);
+    console.log("Transactions loaded from local storage: ", storedTransactions);
+  }, []);
+
+
+  console.log("Demo Transactions: ", demoTransactions, "Transactions: ", transactions);
   const groupByCategory = (transactions) => {
     const grouped = {};
     transactions.forEach((tx) => {
@@ -79,6 +75,7 @@ const Dashboard = () => {
       setTransactions(updatedTransactions);
       console.log("Transaction Updated: ", newTransaction);
       // also updating the transaction in local storage
+      if (demoTransactions) return;
       localStorage.setItem("transactions", JSON.stringify(updatedTransactions));
       return;
     }
@@ -100,6 +97,7 @@ const Dashboard = () => {
     setTransactions(updatedTransactions);
     console.log("Transaction Deleted: ", id);
     // also deleting the transaction from local storage
+    if (demoTransactions) return;
     const existingTransactions = JSON.parse(localStorage.getItem("transactions")) || [];
     const updatedStoredTransactions = existingTransactions.filter((transaction) => transaction.id !== id);
     localStorage.setItem("transactions", JSON.stringify(updatedStoredTransactions));
@@ -108,6 +106,7 @@ const Dashboard = () => {
 
   const storingTransaction = (transaction) => {
     // storing the transaction in local storage
+    if (demoTransactions) return;
     const existingTransactions = JSON.parse(localStorage.getItem("transactions")) || [];
     existingTransactions.push(transaction);
     localStorage.setItem("transactions", JSON.stringify(existingTransactions));
@@ -117,19 +116,8 @@ const Dashboard = () => {
   return (
     <div className=" min-h-screen bg-gray-100 pb-40">
       <div>
-        {/* <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-          <Card title="Total Expenses" value={`₹${totalExpenses}`} />
-          <Card title="Top Category" value={`${topCategory?.category} – ₹${topCategory?.total}`} />
-          <Card title="Most Recent" value={`${recentTx?.description} – ₹${recentTx?.amount}`} />
-        </div> */}
-
-
         <h1 className="text-3xl font-bold text-center pt-8">Welcome to Your Dashboard</h1>
         <div className="relative flex justify-center items-center mt-6  mx-20 p-4 bg-white rounded-lg shadow-md">
-          {/* <div className="absolute top-4 right-4 bg-slate-100 rounded-2xl border border-black z-10 flex space-x-4 mb-4">
-            <button className={`${BarChart} && bg-slate-400 rounded-2xl px-2 cursor-pointer`}>Bar Chart</button>
-            <button className={`${!BarChart} && bg-slate-400 rounded-2xl px-2 cursor-pointer`}>Pie Chart</button>
-          </div> */}
           <div className="absolute text-sm top-4 right-4 bg-slate-100 rounded-xl border border-slate-700 z-10 flex p-1">
             <button
               onClick={() => setIsBarChart(true)}
