@@ -1,4 +1,8 @@
 // components/MonthlyBarChart.js
+'use client';
+
+import React, { useState, useEffect } from 'react';
+import { CloudCog } from "lucide-react";
 import {
     BarChart,
     Bar,
@@ -31,7 +35,7 @@ function groupByMonth(transactions) {
         const date = new Date(tx.date);
         const month = months[date.getMonth()];
         // const month = `${months[date.getMonth()]} ${date.getFullYear()}`;
-        if(date.getFullYear() !== new Date().getFullYear()) {
+        if (date.getFullYear() !== new Date().getFullYear()) {
             return; // Skip transactions not in the current year
         }
         grouped[month] = (grouped[month] || 0) + Number(tx.amount);
@@ -60,10 +64,32 @@ function sortByMonth(data) {
 }
 
 const MonthlyBarChart = ({ transactions }) => {
+    const [width, setWidth] = useState(0);
+
+    useEffect(() => {
+        // Handler to update width based on window size
+        const updateWidth = () => {
+            const newWidth = window.innerWidth < 700 ? 370 : 700;
+            setWidth(newWidth);
+        };
+
+        updateWidth();
+
+        // Listen to resize events
+        window.addEventListener('resize', updateWidth);
+    }, []);
+
+
     const data = groupByMonth(transactions);
     const sortedData = sortByMonth(data); // sorting the data by month
-    console.log("Sorted Data: ", sortedData);
-    const width = sortedData.length * 120; // Adjust width based on number of months
+    if (sortedData.length === 0) {
+        return (
+            <div className="w-full h-[300px] flex items-center justify-center">
+                <CloudCog className="h-12 w-12 text-gray-500" />
+                <p className="text-gray-500">No transactions available</p>
+            </div>
+        );
+    }
 
     return (
         <ResponsiveContainer width={width} height={300}>

@@ -13,8 +13,7 @@ import {
 import AddTransactionModal from "./AddTransactionModel";
 import ShowTransactionModal from "./ShowInsightModel";
 import MonthlyBarChart from "./MonthlyBarChart";
-
-import CategoryPieChart from "./ui/CategoryPieChart";
+import CategoryPieChart from "./CategoryPieChart";
 
 
 const Dashboard = ({ transactions: demoTransactions }) => {
@@ -116,8 +115,8 @@ const Dashboard = ({ transactions: demoTransactions }) => {
   return (
     <div className=" min-h-screen bg-gray-100 pb-40">
       <div>
-        <h1 className="text-3xl font-bold text-center pt-8">Welcome to Your Dashboard</h1>
-        <div className="relative flex justify-center items-center mt-6  mx-20 p-4 bg-white rounded-lg shadow-md">
+        <h1 className="text-3xl font-bold text-center py-10 mx-4">Welcome to Your Dashboard</h1>
+        <div className="relative flex justify-center items-center mt-6  md:mx-20 p-4 pt-16 bg-white rounded-lg shadow-md">
           <div className="absolute text-sm top-4 right-4 bg-slate-100 rounded-xl border border-slate-700 z-10 flex p-1">
             <button
               onClick={() => setIsBarChart(true)}
@@ -147,7 +146,7 @@ const Dashboard = ({ transactions: demoTransactions }) => {
           Here you can track your expenses and manage your finances.
         </p>
       </div>
-      <div className={" bg-white border border-xl rounded-lg mx-20 mt-4 text-gray-500"}>
+      <div className={" bg-white border border-xl rounded-lg md:mx-20 mt-4 text-gray-500"}>
         {/* <h1 className="text-2xl font-bold my-6 text-center">Recent Transactions</h1> */}
         <Table >
           {/* <TableCaption>Recent Transactions</TableCaption> */}
